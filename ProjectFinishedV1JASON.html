@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Tracker</title>
+</head>
+<body>
+    <!--Title-->
+    <h1>Health Tracker</h1>
+
+    <!--Time-->
+    <h2>Time</h2>
+    <p id="time"></p>
+    <br>
+
+    <!--BMI Calculator-->
+    <h2>BMI Calculator</h2>
+    <label for="weight">Weight (KG): </label>
+    <input type="number" id="weight" name="weight" placeholder="KG">
+    <br>
+    <label for="height">Height (CM): </label>
+    <input type="number" id="height" name="height" placeholder="CM">
+    <br>
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <p id="bmiResult"></p>
+
+    <!--Blood Pressure-->
+
+    <h2>Blood Pressure</h2>
+    <label for="bloodPressure">Blood Pressure </label>
+    <input type="number" id="systolic" name="Systolic" placeholder="Systolic">
+    <input type="number" id="diastolic" name="Diastolic" placeholder="Diastolic">
+    <br>
+    <button onclick="displayBloodPresure()">Display Blood Pressure Level </button>
+    <p id="BloodPressure_Status"></p>
+
+    <!--Calorie Display-->
+    <h2>Calorie Intake</h2>
+    <label for="calories">BreakFast :</label>
+    <input type="text" id="breakfast" name="calories" placeholder="(e.g.)1 bowl of fried rice" >
+    <br>
+    <label for="calories">Lunch :</label>
+    <input type="text" id="lunch" name="calories" placeholder="(e.g.)1 bowl of raman">
+    <br>
+    <label for="calories">Dinner :</label>
+    <input type="text" id="Dinner" name="calories" placeholder="(e.g.)1 piece of bread , 2 bowl of rice">
+    <br>
+    <button onclick="Calorie_Intake()">Calculate Calories</button>
+    <p id="Calorietotalintake"></p>
+
+    <!--Heart Rate Display-->
+    <h2>Heart Rate</h2>
+    <label for="heartRate">Heart Rate (bpm): </label>
+    <input type="number" id="heartRate" name="heartRate" placeholder="HeartRate">
+    <input type="number" id="heartRate_age" name="heartRate_age" placeholder="Age">
+    <button onclick="displayHeartRate()">Display Heart Rate</button>
+    <p id="heartrateresults"></p>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <h2>Download Your Information!</h2>
+    <p>Please Download Your Information After You Have Entered Every Section!</p>
+    <button onclick="downloadHTML()">Download</button>
+<script>
+//Current Time
+const currentdate = new Date()
+var Year = currentdate.getFullYear();
+var Month = currentdate.getMonth() + 1;
+var Day = currentdate.getDate();
+var Weekday = weekdays();
+function weekdays() {
+    var Eng_Weekday = currentdate.getDay() ;
+
+    if (Eng_Weekday = 0) {
+        return "Monday"
+    } else if (Eng_Weekday = 1) {
+        return "Tuesday"
+    } else if (Eng_Weekday = 2) {
+        return "Wednesday"
+    } else if (Eng_Weekday = 3) {
+        return "Thursday"
+    } else if (Eng_Weekday = 4) {
+        return "Friday"
+    } else if (Eng_Weekday = 5) {
+        return "Saturday"
+    } else if (Eng_Weekday = 6) {
+        return "Sunday"
+    }
+}
+document.getElementById('time').innerHTML = Day + "/" + Month + "/" + Year + ", Today is " + Weekday
+//BMI Calculate and Output
+function calculateBMI() {
+    var weight = document.getElementById('weight').value;
+    var height = document.getElementById('height').value;
+    var bmi = weight / ((height / 100) * (height / 100));
+    var BMI_Status = CalculateBMI_Status(bmi)
+    document.getElementById('bmiResult').innerHTML = "Your BMI is " + bmi.toFixed(2) + ", You are " + BMI_Status;
+}
+//Bloodpressure Display
+function displayBloodPresure() {
+    var diastolic = document.getElementById('diastolic').value;
+    var systolic = document.getElementById('systolic').value
+    var bloodPressure_Status = checkBloodPressure(systolic,diastolic)
+    
+    document.getElementById('BloodPressure_Status').innerHTML = ("Your blood Pressure is " + systolic + "/" + diastolic + " mmHg" + ", " + bloodPressure_Status);
+    }
+//HeartRate Display
+function displayHeartRate() {
+    var heartRate = document.getElementById('heartRate').value;
+    var heartRate_age = document.getElementById('heartRate_age').value;
+    var heartRate_Status = HeartRate_Age(heartRate_age,heartRate)
+    document.getElementById('heartrateresults').innerHTML = ("Your heart rate is " + heartRate + " bpm, " + heartRate_Status );
+}
+//Function for Blood Pressure
+function checkBloodPressure(systolic, diastolic) {
+    if(systolic < 120 && diastolic < 80) {
+            return "Normal";
+        } else if((systolic >= 120 && systolic <= 129) && diastolic < 80) {
+            return "Elevated";
+        } else if((systolic >= 130 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89)) {
+            return "High blood pressure (stage 1)";
+        } else if(systolic >= 140 || diastolic >= 90) {
+            return "High blood pressure (stage 2)";
+        } else if(systolic > 180 || diastolic > 120) {
+            return "Hypertensive crisis (consult your doctor immediately)";
+        } else {
+            return "Error: Invalid blood pressure readings";
+        }
+    }
+//Function for BMi Calulation
+function CalculateBMI_Status(BMI) {
+    if (BMI < 18.5) {
+        return "Underweight";
+    } else if (BMI >= 18.5 && BMI <= 24.9) {
+        return "Normal";
+    } else if (BMI >= 25 && BMI <= 29.9) {
+        return "Overweight";
+    } else if (BMI >= 30) {
+        return "Obese";
+    }
+
+}
+//Function For HeartRate Status depending on the Age
+function HeartRate_Age(age, heartrate) {
+    if (20 <= age && age <= 24) {
+        if(100 <= heartrate && heartrate<=170 ) {
+            return "Your Heart Rate is Normal";
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        } 
+    } else if (25 <= age && age <= 30) {
+        if (95<= heartrate && heartrate <=162) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (31 <= age && age <= 35) {
+        if (93<= heartrate && heartrate <=157) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        } 
+    } else if (36 <= age && age <= 40) {
+        if (90<= heartrate && heartrate <=153) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (41 <= age && age <= 45) {
+        if (88<= heartrate && heartrate <=149) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (46 <= age && age <= 50) {
+        if (85<= heartrate && heartrate <=145) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (51 <= age && age <= 55) {
+        if (83<= heartrate && heartrate <=140) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (56 <= age && age <= 60) {
+        if (80<= heartrate && heartrate <=136) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (61 <= age && age <= 65) {
+        if (78<= heartrate && heartrate <=132) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else if (66 <= age && age <= 70) {
+        if (75<= heartrate && heartrate <=128) {
+            return "Your Heart Rate is Normal"
+        } else {
+            return "Your Heart rate is not within the targeted range, Please seek for professional advice!"
+        }
+    } else {
+        return "Unforunately, We do not have this age's data, please seek for professional advice if needed"
+    }
+}
+
+//function for Calorie Intake
+function Calorie_Intake() {
+    var breakfast = document.getElementById('breakfast').value;
+    var lunch = document.getElementById('lunch').value;
+    var dinner = document.getElementById('Dinner').value;
+    var calorielist = [breakfast, lunch, dinner];
+    
+    var promises = calorielist.map(function(meal) {
+        return $.ajax({
+            method: 'GET',
+            url: 'https://api.calorieninjas.com/v1/nutrition?query=' + meal,
+            headers: { 'X-Api-Key': '7a2z78mOfXAZlCONQWvgxg==KnYlfNeR8CuBEz3n'},
+            contentType: 'application/json'
+        });
+    });
+
+    Promise.all(promises).then(function(results) {
+        var totalCalories = 0;
+        results.forEach(function(result) {
+            var calorieList = result.items.map(function(item) {
+                return item.calories;
+            });
+            totalCalories += calorieList.reduce((a, b) => a + b, 0);
+        });
+        if (totalCalories == 0) {
+            document.getElementById('Calorietotalintake').innerHTML = ("Your Input was not correct, please try again")
+        } else {
+        document.getElementById('Calorietotalintake').innerHTML = ("Your total Calories today is around : " + totalCalories);
+        }
+    }).catch(function(jqXHR) {
+        console.error('Error: ', jqXHR.responseText);
+    });
+}
+
+
+//Download Content for Record
+function downloadHTML() {   
+    var ids = ["time","bmiResult","BloodPressure_Status","Calorietotalintake","heartrateresults"]
+
+    var text_save = ''
+    
+    ids.forEach(function(id) {
+        var meow_id = document.getElementById(id);
+        if (meow_id) {
+            text_save += meow_id.innerHTML +'\n'
+        }
+    })
+        var downloadcontent = new Blob([text_save], {type: "text/plain;charset=utf-8"});
+        var url = URL.createObjectURL(downloadcontent);
+
+        var downloadlink = document.createElement('a')
+        downloadlink.href = url;
+        downloadlink.download = "Data.txt"
+
+        document.body.appendChild(downloadlink)
+        downloadlink.click();
+        document.body.removeChild(downloadlink)
+
+}
+</script>
+
+</body>
+
+</html>
